@@ -10,7 +10,16 @@ if (isset($_POST['buttonB1'])) { shell_exec('sudo /home/pi/raspberry-remote/send
 if (isset($_POST['buttonC0'])) { shell_exec('sudo /home/pi/raspberry-remote/send 10010 3 0'); }
 if (isset($_POST['buttonC1'])) { shell_exec('sudo /home/pi/raspberry-remote/send 10010 3 1'); }
 
+$var1 = $_POST['name'];
+$var2 = $_POST['code'];
+$var3 = $_POST['group'];
+
+if ($_POST['formaction']=='input') {
 	
+ exec("sudo /var/www/database.py $var1 $var2 $var3");
+ $new_button = TRUE;
+
+ }	
 
  
 $sysinfo = shell_exec('uname -nmor');
@@ -28,7 +37,8 @@ $systime = shell_exec('date');
 <form action="plugPHP.php" method="post">
   <p>name:<br><input name="name" type="text" size="30" maxlength="30"></p>
   <p>code:<br><input name="code" type="text" size="30" maxlength="40"></p>
-  <input type="submit">
+  <p>group:<br><input name="group" type="text" size="30" maxlength="40"></p>
+  <input type="submit" name="formaction" value="input">
 </form>
 	
 
@@ -48,11 +58,6 @@ body {
 	font-size:25px;
 	font-family:verdana, sans-serif;
 	}
-.submitButton{
-	text-align:left;
-	font-size:25px;
-	font-family:verdana, sans-serif;
-	} 
 .onButton, .offButton {
 	width:200px;
 	height:100px;
@@ -73,9 +78,6 @@ body {
 <body>
  
 <form action="" method="post">
-    <div class="submitButton">
-	<button class="submitButton" type="submit" name="buttonEnter">ENTER</button>
-    </div>
 
 	<div class="wrapButtons">
 	<p>Steckdose A</p>

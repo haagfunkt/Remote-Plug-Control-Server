@@ -5,19 +5,34 @@
 $dip = $_GET["dip"];
 $state = $_GET["state"];
 $time = $_GET["time"];
+$group = $_GET["group"];
+
 
 echo $dip;
 echo $state;
 echo $time;
 
+if ($dip=="")
+{
+	 $dip=09990;
+}
+
 if ($time=="")
 {
 	 $time=0;
 }
-echo $time;
 
+if ($state=="")
+{
+	$state=toggle;
+}
 
-$temp = exec("sudo /var/www/send.py $dip $state $time");
+if ($group=="")
+{
+	$group=no_group;
+}
+
+$temp = exec("sudo /var/www/send.py $dip $state $time $group");
 
 echo "success";
 

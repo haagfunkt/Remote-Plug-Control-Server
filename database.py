@@ -14,20 +14,21 @@ import sqlite3 as lite
 
 php_name=sys.argv[1]
 php_code=sys.argv[2]
-php_state=sys.argv[3]
+php_group=sys.argv[3]
+
 
 txtfiletest = open("/var/www/test.txt", "a")
-txtfiletest.write("PARAMERTER: name %s code %s state %s\n" % (php_name, php_code, php_state))
+txtfiletest.write("PARAMERTER: name %s code %s\n" % (php_name, php_code))
 txtfiletest.close()
 	
 ################ Refresh State in SQL ########################
-#con = lite.connect('/home/pi/Steckdosen.db')			#Connect to SQL Database				
-#with con:
-#	cur = con.cursor()
+con = lite.connect('/home/pi/Steckdosen.db')			#Connect to SQL Database				
+with con:
+	cur = con.cursor()
 #	#cur.execute("DROP TABLE IF EXISTS plugs")
 #	#cur.execute("CREATE TABLE plugs(name TEXT, address TEXT, state TEXT)")
 #	cur.execute("UPDATE plugs SET state=? WHERE address=?", (state, php_dip))
-#	#cur.execute("INSERT INTO plugs VALUES(?, ?, ?)", (NAME,ADDRESS,STATE))		
-#		
+#	#cur.execute("INSERT INTO plugs VALUES(?, ?, ?)", (NAME,ADDRESS,STATE))	
+        cur.execute("INSERT INTO plugs VALUES(?,?,?,?)",(php_name,php_code,'1',php_group));		
 #	con.close
 #
