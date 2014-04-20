@@ -1,30 +1,53 @@
 <?php
- 
+
 /* Check which button was pressed */
 if (isset($_POST['buttonA0'])) { shell_exec('sudo /home/pi/raspberry-remote/send 10010 1 0'); }
 if (isset($_POST['buttonA1'])) { shell_exec('sudo /home/pi/raspberry-remote/send 10010 1 1'); }
  
-if (isset($_POST['buttonB0'])) { shell_exec('sudo /home/pi/raspberry-remote/send 10010 2 0'); }
-if (isset($_POST['buttonB1'])) { shell_exec('sudo /home/pi/raspberry-remote/send 10010 2 1'); }
+if (isset($_POST['buttonB0'])) { exec("sudo /var/www/send.py B off 0 no_group"); }
+if (isset($_POST['buttonB1'])) { exec("sudo /var/www/send.py B on 0 no_group"); }
  
-if (isset($_POST['buttonC0'])) { shell_exec('sudo /home/pi/raspberry-remote/send 10010 3 0'); }
-if (isset($_POST['buttonC1'])) { shell_exec('sudo /home/pi/raspberry-remote/send 10010 3 1'); }
+if (isset($_POST['buttonC0'])) { exec("sudo /var/www/send.py C off 0 no_group"); }
+if (isset($_POST['buttonC1'])) { exec("sudo /var/www/send.py C on 0 no_group"); }
+
 
 $var1 = $_POST['name'];
+if ($var1 == ''){ $var1 = 'o';}
 $var2 = $_POST['code'];
+if ($var2 == ''){ $var2 = 'o';}
 $var3 = $_POST['group'];
+if ($var3 == ''){ $var3 = 'o';}
 
-if ($_POST['formaction']=='input') {
-	
- exec("sudo /var/www/database.py $var1 $var2 $var3");
+
+
+if ($_POST['formaction']=='create') 
+{	
+ $var4 = "create";
+ exec("sudo /var/www/database.py $var1 $var2 $var3 $var4");
  $new_button = TRUE;
 
  }	
+if ($_POST['delete']=='delete') {	
+ $var4 = "delete";
+ exec("sudo /var/www/database.py $var1 $var2 $var3 $var4");
+ $delete_button = TRUE;
 
- 
-$sysinfo = shell_exec('uname -nmor');
-$systime = shell_exec('date');
- 
+ }	
+
+if (isset($_POST['show_SQL'])) { 
+// print SQL DATA
+//connect to DB
+$db = new SQLite3('/home/pi/Steckdosen.db');
+    $tablesquery = $db->query("SELECT * FROM plugs;");
+
+    while ($table = $tablesquery->fetchArray(SQLITE3_ASSOC)) {
+        echo $table['name'] . ' | ';
+	echo $table['address'] . ' | ';
+	echo $table['state'] . ' | ';
+	echo $table['category'] . '<br />';
+    }
+$db->close();
+}
 ?>
  
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -38,10 +61,11 @@ $systime = shell_exec('date');
   <p>name:<br><input name="name" type="text" size="30" maxlength="30"></p>
   <p>code:<br><input name="code" type="text" size="30" maxlength="40"></p>
   <p>group:<br><input name="group" type="text" size="30" maxlength="40"></p>
-  <input type="submit" name="formaction" value="input">
+  <input type="submit" name="formaction" value="create">
+  <input type="submit" name="delete" value="delete">
+  <input type="submit" name="show_SQL" value="show_SQL">
 </form>
-	
-
+ <p>create requires input in every field. Delete only requires one field <br></p>
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>RPi</title>
@@ -96,8 +120,22 @@ body {
     	<button class="offButton" type="submit" name="buttonC0">Aus</button>
     	<button class="onButton" type="submit" name="buttonC1">Ein</button>
     </div>
+<?php
+if ($new_button = TRUE)
+{
+?>
+<form action="" method="post">
 
+	<div class="wrapButtons">
+	<p><?php echo $var1 ?></p>
+    	<button class="offButton" type="submit" name="buttonD0">Aus</button>
+    	<button class="onButton" type="submit" name="buttonD1">Ein</button>
+    </div>
 
+<?php
+$new_button = FALSE;
+}
+?>
 </form>
  
 <hr style="margin-top:35px;">
