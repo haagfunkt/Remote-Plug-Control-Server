@@ -18,3 +18,6 @@ http://192.168.1.111/mfi.php?dip="all off"		   -switch all off
 http://192.168.1.111/mfi.php?state=on&group="group_name"   		  -switch plugs in group "on"
 http://192.168.1.111/mfi.php?state=off&group="group_name"&time=10	  -switch plugs in group "off" in 10 seconds
 http://192.168.1.111/mfi.php?dip="address"&time=10			  -invert state of plug in 10 seconds			
+
+database.py interacts with sqlite3 database
+send.py grabs values from php.skript and sends command to send c++ file to interact with the switches
