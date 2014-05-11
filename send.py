@@ -27,10 +27,10 @@ i=0
 
 #switch plug on or off ?
 if php_state == "on":
-    state = 1
+    state = "01"
     
 elif php_state == "off":
-    state = 0
+    state = "00"
 
 #group on / off
 if php_group != "no_group":
@@ -60,7 +60,7 @@ if php_dip == "all on":
 	if count == 1:
 		php_dip = ret_address[0]
 		php_dip = php_dip[0]
-	state = 1
+	state = "01"
 	php_state=state
 #all off
 if php_dip == "all off":
@@ -75,7 +75,7 @@ if php_dip == "all off":
 	if count == 1:
 		php_dip = ret_address[0]
 		php_dip = php_dip[0]
-	state = 0
+	state = "00"
 	php_state=state
 	
 	
@@ -100,10 +100,10 @@ if php_state == "toggle":
 	ret_state=ret_state[0]
 
 #invert state
-if ret_state == "0":
-    state = "1"
-elif ret_state == "1":
-    state = "0"
+if ret_state == "00":
+    state = "01"
+elif ret_state == "01":
+    state = "00"
 
 #initialize timer if set
 wait_time = float(php_time)
@@ -119,7 +119,7 @@ for i in range(count):
 	comm="send %s %s" %(php_dip, state)
 
 	#run switch command for plug
-	for l in range(5):
+	for l in range(1):
 		os.system("sudo /home/pi/raspberry-remote/%s" %comm)	
 ################### Refresh State in SQL ########################
 	with con:
